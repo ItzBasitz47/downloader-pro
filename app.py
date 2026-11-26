@@ -93,7 +93,17 @@ if st.button("Process & Prepare Download", type="primary", use_container_width=T
                         "no_warnings": True,
                         "geo_bypass": True,
                         "nocheckcertificate": True,
+                        "cachedir": False,
+                        "source_address": "0.0.0.0",
                     }
+
+                    # Sirf YouTube ke liye 403 bypass clients
+                    if "youtube.com" in clean_url or "youtu.be" in clean_url:
+                        ydl_opts["extractor_args"] = {
+                            "youtube": {
+                                "player_client": ["android_vr", "tv_embedded", "web"]
+                            }
+                        }
 
                     cookie_path = os.path.join(DOWNLOAD_DIR, f"{job_id}_cookies.txt")
                     if cookie_file is not None:
