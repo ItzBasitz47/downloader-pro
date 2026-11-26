@@ -6,7 +6,7 @@ import yt_dlp
 
 st.set_page_config(page_title="Downloader Pro", layout="centered")
 st.title("Downloader Pro")
-st.caption("YouTube, Insta, FB & 1000+ Sites — 4K Video & MP3 Converter")
+st.caption("YouTube, Insta, FB, X (Twitter) & 1000+ Sites — 4K Video & MP3 Converter")
 
 DOWNLOAD_DIR = "/tmp/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
@@ -32,21 +32,21 @@ if st.button("Process & Prepare Download", type="primary", use_container_width=T
             "no_warnings": True,
             "geo_bypass": True,
             "nocheckcertificate": True,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["android", "ios", "web"]
-                }
-            },
-            "http_headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-            }
         }
 
+        cookie_path = os.path.join(DOWNLOAD_DIR, f"{job_id}_cookies.txt")
         if cookie_file is not None:
-            cookie_path = os.path.join(DOWNLOAD_DIR, f"{job_id}_cookies.txt")
             with open(cookie_path, "wb") as f:
                 f.write(cookie_file.getvalue())
             ydl_opts["cookiefile"] = cookie_path
+        else:
+            try:
+                if "YOUTUBE_COOKIES" in st.secrets:
+                    with open(cookie_path, "w", encoding="utf-8") as f:
+                        f.write(st.secrets["YOUTUBE_COOKIES"])
+                    ydl_opts["cookiefile"] = cookie_path
+            except Exception:
+                pass
 
         if quality == "Audio Only (MP3)":
             ydl_opts.update({
@@ -65,7 +65,7 @@ if st.button("Process & Prepare Download", type="primary", use_container_width=T
             }
             height = height_map[quality]
             ydl_opts.update({
-                "format": f"bestvideo[height<={height}]+bestaudio/best[height<={height}]/best",
+                "format": f"bv*[height<={height}]+ba/b[height<={height}]/bv*+ba/b",
                 "merge_output_format": "mp4",
             })
 
