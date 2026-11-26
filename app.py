@@ -30,6 +30,16 @@ if st.button("Process & Prepare Download", type="primary", use_container_width=T
             "noplaylist": True,
             "quiet": True,
             "no_warnings": True,
+            "geo_bypass": True,
+            "nocheckcertificate": True,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "ios", "web"]
+                }
+            },
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+            }
         }
 
         if cookie_file is not None:
