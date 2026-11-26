@@ -25,13 +25,18 @@ if st.button("Process & Prepare Download", type="primary", use_container_width=T
         job_id = str(uuid.uuid4())[:8]
         out_tmpl = os.path.join(DOWNLOAD_DIR, f"{job_id}_%(title).50s.%(ext)s")
 
-        ydl_opts = {
+       ydl_opts = {
             "outtmpl": out_tmpl,
             "noplaylist": True,
             "quiet": True,
             "no_warnings": True,
             "geo_bypass": True,
             "nocheckcertificate": True,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["tv", "web"]
+                }
+            },
         }
 
         cookie_path = os.path.join(DOWNLOAD_DIR, f"{job_id}_cookies.txt")
